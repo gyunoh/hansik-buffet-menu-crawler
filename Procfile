@@ -1,1 +1,1 @@
-web: npm i puppeteer && npm start
+web: npm start
