@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon -e yml,js,json, ./bin/www"
+    "start": "node ./bin/www",
+    "start:dev": "nodemon -e yml,js,json, ./bin/www"
   },
   "engines": {
     "node": "16.x"
