@@ -17,15 +17,11 @@ router.get('/', async (req, res, next) => {
 
         const hrefs = await page.evaluate(() => Array.from(document.querySelectorAll('._ac7v._aang a'))?.map((el) => el.href));
         
-        await browser.close();
-        
         if (hrefs?.length) {
             const urls = await Promise.all(hrefs.splice(0, 2)?.map(async (href) => {
-                const browser = await puppeteer.launch();
                 const page = await browser.newPage();
                 await page.goto(href, { waitUntil: 'networkidle2' });
                 const url = await page.evaluate(() => document.querySelector('._aatk._aatn img')?.src);
-                browser.close();
                 return url;
             }));
 
@@ -48,9 +44,12 @@ router.get('/', async (req, res, next) => {
                     })
                 ]
             });
-
+        
+            await browser.close();
             return res.sendStatus(200);
         }
+        
+        await browser.close();
     }
 
     await axios.post(process.env.SLACK_CHANNEL_WEBHOOK_URL, { text: '메뉴를 찾지 못했습니다... :(' });
