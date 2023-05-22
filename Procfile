@@ -1,1 +1,1 @@
-web: npm start
+web: sudo apt-get install libatk1.0-0 && npm start
