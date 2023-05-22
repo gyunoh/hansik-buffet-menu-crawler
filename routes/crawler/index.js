@@ -8,7 +8,12 @@ router.get('/', async (req, res, next) => {
     await axios.post(process.env.SLACK_CHANNEL_WEBHOOK_URL, { text: `${instaId} 메뉴를 찾고 있습니다...` });
 
     if (instaId) {
-        const browser = await puppeteer.launch({ headless: 'new', args: ['--no-sandbox'], ignoreDefaultArgs: ['--disable-extensions'] });
+        const browser = await puppeteer.launch({
+            ignoreDefaultArgs: ['--disable-extensions'],
+            headless: false,
+            args: ['--no-sandbox', "--disabled-setupid-sandbox"]
+        });
+
         const page = await browser.newPage();
 
         await page.goto(`https://www.instagram.com/${instaId}/`, {
