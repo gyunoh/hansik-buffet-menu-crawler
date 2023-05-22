@@ -8,7 +8,7 @@ router.get('/', async (req, res, next) => {
     await axios.post(process.env.SLACK_CHANNEL_WEBHOOK_URL, { text: `${instaId} 메뉴를 찾고 있습니다...` });
 
     if (instaId) {
-        const browser = await puppeteer.launch();
+        const browser = await puppeteer.launch({ headless: true });
         const page = await browser.newPage();
 
         await page.goto(`https://www.instagram.com/${instaId}/`, {
@@ -29,19 +29,26 @@ router.get('/', async (req, res, next) => {
             }));
 
             await axios.post(process.env.SLACK_CHANNEL_WEBHOOK_URL, {
-                blocks: urls?.map((url) => {
-                    return {
-                        "type": "image",
-                        "title": {
+                blocks: [
+                    {
+                        "type": "header",
+                        "text": {
                             "type": "plain_text",
                             "text": `:knife_fork_plate: ${instaId}의 오늘의 메뉴입니다`,
                             "emoji": true
-                        },
-                        "image_url": url,
-                        "alt_text": "marg"
-                    }
-                })
+                        }
+                    },
+                    ...urls?.map((url) => {
+                        return {
+                            "type": "image",
+                            "image_url": url,
+                            "alt_text": url
+                        }
+                    })
+                ]
             });
+
+            return res.sendStatus(200);
         }
     }
 
