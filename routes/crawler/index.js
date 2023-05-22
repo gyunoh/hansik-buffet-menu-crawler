@@ -25,6 +25,7 @@ router.get('/', async (req, res, next) => {
                 const page = await browser.newPage();
                 await page.goto(href, { waitUntil: 'networkidle2' });
                 const url = await page.evaluate(() => document.querySelector('._aatk._aatn img')?.src);
+                browser.close();
                 return url;
             }));
 
